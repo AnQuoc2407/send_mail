@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Email from Localhost</title>
+</head>
+<body>
+    <h1>Send an Email</h1>
+    <form id="email-form">
+        <label for="to">To:</label>
+        <input type="email" id="to" name="to" required><br><br>
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required><br><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" required></textarea><br><br>
+        <button type="submit">Send Email</button>
+    </form>
+
+    <script>
+        // Function to send the email via the backend API
+        document.getElementById('email-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const to = document.getElementById('to').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            const emailData = {
+                to: to,
+                subject: subject,
+                text: message,
+            };
+
+            fetch('http://localhost:3000/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(emailData),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                document.getElementById('email-form').reset();
+            })
+            .catch(error => {
+                alert('Error sending email: ' + error);
+            });
+        });
+    </script>
+</body>
+</html>
